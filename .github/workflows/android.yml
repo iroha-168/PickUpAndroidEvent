@@ -3,14 +3,14 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - master
     paths-ignore:
       - docs/**
       - README.md
       - LICENSE
   pull_request:
     branches:
-      - main
+      - master
     paths-ignore:
       - docs/**
       - README.md
@@ -41,24 +41,3 @@ jobs:
     # テスト
     - name: Test with Gradle
       run: ./gradlew test --stacktrace
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    # チェックアウト
-    - uses: actions/checkout@v2
-
-    # 静的解析
-    - name: Run Inspection
-      run: ./gradlew lint
-
-    # 結果の表示
-    - uses: yutailang0119/action-android-lint@v1
-      with:
-        xml_path: '**/build/reports/lint-results-*.xml'
-
-    # Dangerで出力
-    - name: run danger
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: danger
