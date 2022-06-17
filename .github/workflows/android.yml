@@ -60,5 +60,5 @@ jobs:
     # アーティファクトへアップロード
     # Dangerで出力
     - name: run danger
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
