@@ -3,14 +3,14 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - master
     paths-ignore:
       - docs/**
       - README.md
       - LICENSE
   pull_request:
     branches:
-      - main
+      - master
     paths-ignore:
       - docs/**
       - README.md
@@ -62,5 +62,3 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: danger
-
-      
