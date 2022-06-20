@@ -7,6 +7,7 @@ import androidx.compose.ui.res.stringResource
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.mitchan.pickupandroidevent.R
+import com.mitchan.pickupandroidevent.ui.screen.event.EventScreen
 import com.mitchan.pickupandroidevent.ui.theme.PickUpAndroidEventTheme
 
 @OptIn(ExperimentalPagerApi::class)
@@ -19,7 +20,7 @@ fun PickUpAndroidEventApp() {
             Column {
                 TextTabs()
                 HorizontalPager(count = 2) {
-
+                    EventScreen()
                 }
             }
         }
