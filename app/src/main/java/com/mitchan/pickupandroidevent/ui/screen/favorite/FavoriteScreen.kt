@@ -1,15 +1,12 @@
-package com.mitchan.pickupandroidevent.ui.screen.event
+package com.mitchan.pickupandroidevent.ui.screen.favorite
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.mitchan.pickupandroidevent.ui.component.EventCard
 
 @Composable
-fun EventScreen() {
-    LazyColumn(modifier = Modifier.background(Color.Black)) {
+fun FavoriteScreen() {
+    LazyColumn {
         items(10) { index ->
             EventCard(
                 month = "6",
