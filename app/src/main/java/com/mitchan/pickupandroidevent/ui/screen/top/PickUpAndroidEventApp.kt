@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -75,7 +74,6 @@ fun TextTabs(selectedTabType: TabType, onClick: (TabType) -> Unit) {
     }
 }
 
-// TabTypeはタブの数だけ増える（画面の数だけではない）
 enum class TabType(@StringRes val labelResId: Int) {
     Event(R.string.tab_name_event),
     Favorite(R.string.tab_name_favorite)
