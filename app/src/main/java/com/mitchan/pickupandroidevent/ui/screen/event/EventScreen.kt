@@ -24,9 +24,11 @@ fun EventScreen(viewModel: EventViewModel = hiltViewModel()) {
                 date = itemUiState.date,
                 day = itemUiState.day,
                 eventTitle = itemUiState.event.title,
-                isFavorite = itemUiState.isFavorite,
+                isFavorite = itemUiState.event.isFavorite,
                 startTime = itemUiState.startTime,
-                location = itemUiState.event.place.orEmpty()
+                location = itemUiState.event.place.orEmpty(),
+                eventId = itemUiState.event.eventId,
+                onFavoriteButtonClick = viewModel::onFavoriteButtonClick
             )
         }
     }

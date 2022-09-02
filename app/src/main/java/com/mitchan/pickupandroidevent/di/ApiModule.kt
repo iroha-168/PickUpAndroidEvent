@@ -10,6 +10,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,6 +19,7 @@ class ApiModule {
 
     @OptIn(ExperimentalSerializationApi::class)
     @Provides
+    @Singleton
     fun provideConnpassApiClient() : ConnpassApiClient {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()

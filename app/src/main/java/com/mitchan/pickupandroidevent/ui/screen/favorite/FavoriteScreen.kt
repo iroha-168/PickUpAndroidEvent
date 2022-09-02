@@ -15,7 +15,9 @@ fun FavoriteScreen() {
                 eventTitle = "$index あいうえお",
                 isFavorite = index % 2 == 0,
                 startTime = "19:00",
-                location = "online"
+                location = "online",
+                eventId = 1,
+                onFavoriteButtonClick = {1}
             )
         }
     }

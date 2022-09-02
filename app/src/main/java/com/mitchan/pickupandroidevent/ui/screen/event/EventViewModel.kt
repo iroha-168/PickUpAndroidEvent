@@ -3,13 +3,10 @@ package com.mitchan.pickupandroidevent.ui.screen.event
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mitchan.pickupandroidevent.data.entity.Event
+import com.mitchan.pickupandroidevent.data.db.EventDto
 import com.mitchan.pickupandroidevent.data.repository.EventRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -19,8 +16,12 @@ class EventViewModel @Inject constructor (
     private val eventRepository: EventRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(EventUiState())
-    val uiState: StateFlow<EventUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<EventUiState> = eventRepository.events.map { eventList ->
+        val itemUiState = eventList.map { event ->
+            EventItemUiState(event)
+        }
+        EventUiState(itemUiState)
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, EventUiState())
 
     init {
         refresh()
@@ -29,16 +30,23 @@ class EventViewModel @Inject constructor (
     private fun refresh() {
         viewModelScope.launch {
             runCatching {
-                eventRepository.getEvent()
-            }.onSuccess { eventList ->
-                _uiState.update {
-                    it.copy(eventList = eventList.map { event ->
-                        EventItemUiState(event, false)
-                    })
-                }
+                eventRepository.refresh()
             }.onFailure {
-                Log.d("throwable", it.toString())
+                Log.e("throwable", it.toString())
             }
+        }
+    }
+
+
+    fun onFavoriteButtonClick(eventId: Long) {
+        val selectedEvent = uiState.value.eventList.find {
+            it.event.eventId == eventId
+        } ?: return
+
+        viewModelScope.launch {
+            eventRepository.updateEvent(
+                selectedEvent.event.copy(isFavorite = !selectedEvent.event.isFavorite)
+            )
         }
     }
 
@@ -47,11 +55,10 @@ class EventViewModel @Inject constructor (
     )
 
     data class EventItemUiState(
-        val event: Event,
-        val isFavorite: Boolean
+        val event: EventDto,
     ) {
         private val calendar = Calendar.getInstance().also {
-            it.time = event.startedAt.date
+            it.time = event.startedAt?.date
         }
         val month = calendar.get(Calendar.MONTH).toString() + "月"
         val date = calendar.get(Calendar.DATE).toString()

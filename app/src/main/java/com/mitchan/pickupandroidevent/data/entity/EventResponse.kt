@@ -1,10 +1,9 @@
 package com.mitchan.pickupandroidevent.data.entity
 
 import android.annotation.SuppressLint
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Serializer
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -27,7 +26,8 @@ data class Event(
     @SerialName("event_url")
     val eventUrl: String,
     @SerialName("started_at")
-    val startedAt: DateTime,
+    @Contextual
+    val startedAt: DateTime?,
     val place: String?,
 )
 

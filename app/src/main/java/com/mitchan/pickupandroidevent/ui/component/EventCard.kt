@@ -32,6 +32,8 @@ fun EventCard(
     isFavorite: Boolean,
     startTime: String,
     location: String,
+    eventId: Long,
+    onFavoriteButtonClick: (Long) -> Unit
 ) {
     Card(
         modifier = androidx.compose.ui.Modifier
@@ -67,7 +69,10 @@ fun EventCard(
                     )
                     IconToggleButton(
                         checked = isFavorite,
-                        onCheckedChange = { /* do something */ }) {
+                        onCheckedChange = {
+                            onFavoriteButtonClick(eventId)
+                        }
+                    ) {
                         val tint by animateColorAsState(if (isFavorite) Color.Red else Color.Gray)
                         Icon(Icons.Filled.Favorite, contentDescription = "お気に入り", tint = tint)
                     }
@@ -104,7 +109,9 @@ fun EventCardPreview_isFavorite() {
         eventTitle = "potatotips",
         isFavorite = true,
         startTime = "19:30",
-        location = "online"
+        location = "online",
+        eventId = 1,
+        onFavoriteButtonClick = {1}
     )
 }
 
@@ -118,7 +125,9 @@ fun EventCardPreview_isNotFavorite() {
         eventTitle = "potatotips",
         isFavorite = false,
         startTime = "19:30",
-        location = "online"
+        location = "online",
+        eventId = 1,
+        onFavoriteButtonClick = {1}
     )
 }
 
@@ -132,6 +141,8 @@ fun EventCardPreview_longTitle() {
         eventTitle = "potatotips potatotips potatotips potatotips potatotips",
         isFavorite = true,
         startTime = "19:30",
-        location = "online online online online online online"
+        location = "online online online online online online",
+        eventId = 1,
+        onFavoriteButtonClick = {1}
     )
 }

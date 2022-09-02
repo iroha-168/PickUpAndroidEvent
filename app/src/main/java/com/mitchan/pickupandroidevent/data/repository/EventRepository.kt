@@ -1,25 +1,55 @@
 package com.mitchan.pickupandroidevent.data.repository
 
 import com.mitchan.pickupandroidevent.data.api.ConnpassApiClient
-import com.mitchan.pickupandroidevent.data.entity.Event
+import com.mitchan.pickupandroidevent.data.db.EventDao
+import com.mitchan.pickupandroidevent.data.db.EventDto
 import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
 class EventRepository @Inject constructor(
-    private val connpassApiClient: ConnpassApiClient
+    private val connpassApiClient: ConnpassApiClient,
+    private val eventDao: EventDao
 ) {
-    suspend fun getEvent(): List<Event> {
+    val events = eventDao.getAll()
 
-        // TODO:titleに"kotlin"もしくは"Android"が含まれるデータだけをピックアップする
+    suspend fun refresh() {
         val result = connpassApiClient.getEvents().body()!!
-        return result.events.filter {
+        val events = result.events.filter {
             it.title.contains(BIG_ANDROID)
                     || it.title.contains(SMALL_ANDROID)
                     || it.title.contains(BIG_KOTLIN)
                     || it.title.contains(SMALL_KOTLIN)
                     || it.title.contains(JETPACK_COMPOSE)
+        }.map {
+            EventDto(
+                eventId = it.eventId,
+                eventUrl = it.eventUrl,
+                title = it.title,
+                startedAt = it.startedAt,
+                place = it.place,
+                isFavorite = false
+            )
         }
+        upsert(events)
+    }
+
+    private suspend fun upsert(events: List<EventDto>) {
+        events.forEach { event ->
+            if (eventDao.insert(event) == -1L) {
+                eventDao.update(
+                    eventId = event.eventId,
+                    eventUrl = event.eventUrl,
+                    title = event.title,
+                    startedAt = event.startedAt,
+                    place = event.place
+                )
+            }
+        }
+    }
+
+    suspend fun updateEvent(event: EventDto) {
+        eventDao.update(event)
     }
 
     companion object {
