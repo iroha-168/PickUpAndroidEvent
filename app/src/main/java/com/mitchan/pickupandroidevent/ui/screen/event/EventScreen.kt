@@ -6,19 +6,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.mitchan.pickupandroidevent.ui.component.EventCard
-import java.util.*
+import com.mitchan.pickupandroidevent.ui.screen.EventUiState
 
 @Composable
 fun EventScreen(viewModel: EventViewModel = hiltViewModel()) {
-    val uiState = viewModel.uiState.collectAsState()
-    LazyColumn(modifier = Modifier.background(Color.Black)) {
-        Log.d("UISTATE", uiState.value.toString())
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val flowLifecycleAware = remember(key1 = viewModel, key2 = lifecycleOwner) {
+        viewModel.uiState.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
+    val uiState: EventUiState by flowLifecycleAware.collectAsState(initial = EventUiState())
 
-        items(uiState.value.eventList) { itemUiState ->
+    LazyColumn(modifier = Modifier.background(Color.Black)) {
+        Log.d("UISTATE", uiState.toString())
+
+        items(uiState.eventList) { itemUiState ->
             EventCard(
                 month = itemUiState.month,
                 date = itemUiState.date,

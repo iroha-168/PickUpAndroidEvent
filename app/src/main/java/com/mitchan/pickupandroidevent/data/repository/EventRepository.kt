@@ -12,6 +12,7 @@ class EventRepository @Inject constructor(
     private val eventDao: EventDao
 ) {
     val events = eventDao.getAll()
+    val favoriteEvents = eventDao.getFavoriteEvents()
 
     suspend fun refresh() {
         val result = connpassApiClient.getEvents().body()!!
